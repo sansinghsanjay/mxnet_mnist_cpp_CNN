@@ -24,11 +24,11 @@ const int IMAGE_C = 3;
 // MAIN FUNCTION
 int main() {
 	// variable declaration
-	/*Context ctx = Context::cpu();
+	Context ctx = Context::cpu();
 	auto trainDataX = NDArray(Shape(BATCH_SIZE, IMAGE_W, IMAGE_H, IMAGE_C), ctx);
 	auto trainDataY = NDArray(Shape(BATCH_SIZE), ctx);
 	auto valDataX = NDArray(Shape(BATCH_SIZE, IMAGE_W, IMAGE_H, IMAGE_C), ctx);
-	auto valDataY = NDArray(Shape(BATCH_SIZE), ctx);*/
+	auto valDataY = NDArray(Shape(BATCH_SIZE), ctx);
 	// paths
 	string trainDataCSVPath = "/home/sansingh/github_repo/mxnet_mnist_cpp_CNN/dataset/train_data.csv";
 	string valDataCSVPath = "/home/sansingh/github_repo/mxnet_mnist_cpp_CNN/dataset/val_data.csv";

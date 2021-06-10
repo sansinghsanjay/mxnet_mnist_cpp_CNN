@@ -14,6 +14,6 @@ Following are the commands to run im2rec.py file to generate .rec file for DataI
 				-> 10 -> images
 	For the above setup, keep im2rec.py file just outside the trainingSet directory.
 
-2. $ python3 im2rec.py --list trainList /home/sansingh/Downloads/DATASET/mnist/trainingSet --recursive
+2. $ python3 im2rec.py --list mnistData /home/sansingh/Downloads/DATASET/mnist/trainingSet --recursive --train-ratio 0.8
 
-3. $ python3 im2rec.py trainList /home/sansingh/Downloads/DATASET/mnist/trainingSet --recursive
+3. $ python3 im2rec.py mnistData /home/sansingh/Downloads/DATASET/mnist/trainingSet --recursive
