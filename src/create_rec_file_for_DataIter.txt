@@ -1,0 +1,19 @@
+Following are the commands to run im2rec.py file to generate .rec file for DataIterator:
+
+1. Enter inside the directory having all images in sub-directories with classname as sub-directory name. For instance (MNIST dataset):
+	trainingSet -> 0 -> images
+				-> 1 -> images
+				-> 2 -> images
+				-> 3 -> images
+				-> 4 -> images
+				-> 5 -> images
+				-> 6 -> images
+				-> 7 -> images
+				-> 8 -> images
+				-> 9 -> images
+				-> 10 -> images
+	For the above setup, keep im2rec.py file just outside the trainingSet directory.
+
+2. $ python3 im2rec.py --list trainList /home/sansingh/Downloads/DATASET/mnist/trainingSet --recursive
+
+3. $ python3 im2rec.py trainList /home/sansingh/Downloads/DATASET/mnist/trainingSet --recursive
