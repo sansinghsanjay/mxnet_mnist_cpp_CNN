@@ -29,7 +29,7 @@ const int IMAGE_C = 3;
 const int NUM_CLASSES = 10;
 const int EPOCHS = 10; // epochs for the entire data: 20;
 const float LEARNING_RATE = 0.01;
-const float WEIGHT_DECAY = 1e-2;
+const float INIT_SEED = 0.01;
 
 // function to round off double values up to 2 decimal digits
 float round_fig(double d) {
@@ -136,27 +136,19 @@ int main() {
 	// initialising CNN
 	auto cnn_net = SimpleCNN();
 	cnn_net.InferArgsMap(ctx, &args_map, args_map);
-	auto initializer = Uniform(0.01);
+	// initialising weights and bias
+	auto initializer = Uniform(INIT_SEED);
 	for(auto &arg : args_map) {
 		initializer(arg.first, &arg.second);
 	}
 	cout<<"Initialised CNN"<<endl;
 	// optimization function
 	Optimizer* optimizer = OptimizerRegistry::Find("adagrad");
-	optimizer->SetParam("momentum", 0.9)
-			 ->SetParam("rescale_grad", 1.0 / BATCH_SIZE)
-			 ->SetParam("clip_gradient", 10)
-			 ->SetParam("lr", LEARNING_RATE)
-			 ->SetParam("wd", WEIGHT_DECAY);
+	optimizer->SetParam("lr", LEARNING_RATE);
 	cout<<"Successfully defined optimizer"<<endl;
 	// preparing runtime
 	auto *exec = cnn_net.SimpleBind(ctx, args_map);
 	auto arg_names = cnn_net.ListArguments();
-	// initialising weights and bias
-	/*Xavier xavier = Xavier(Xavier::gaussian, Xavier::in, 2.34);
-	for(auto &arg : exec->arg_dict()) {
-		xavier(arg.first, &arg.second);
-	}*/
 	// training model
 	for(int epoch=0; epoch<EPOCHS; epoch++) {
 		int batchCount = 0;
@@ -175,9 +167,6 @@ int main() {
 				optimizer->Update(i, exec->arg_arrays[i], exec->grad_arrays[i]);
 			}
 			NDArray::WaitAll();
-			batchCount += 1;
-			//if(batchCount % 5 == 0)
-			//	cout<<"Epoch: "<<epoch + 1<<" Batch: "<<batchCount<<endl;
 		}
 		auto end_time = chrono::system_clock::now();
 		float time_taken = round_fig(chrono::duration_cast<chrono::milliseconds> (end_time - start_time).count() / 1000.0);
@@ -185,7 +174,6 @@ int main() {
 		Accuracy train_accuracy;
 		trainImgIter.Reset();
 		float avg_trainAcc = 0.0f;
-		batchCount = 0;
 		while(trainImgIter.Next()) {
 			auto batchData = trainImgIter.GetDataBatch();
 			batchData.data.CopyTo(&args_map["data"]);
@@ -194,12 +182,6 @@ int main() {
 			train_accuracy.Update(batchData.label, exec->outputs[0]);
 			avg_trainAcc += train_accuracy.Get();
 			batchCount += 1;
-			//cout<<"Train: Epoch: "<<epoch + 1<<" Accuracy: "<<train_accuracy.Get()<<endl;
-			/*cout<<"Actual labels of Train Data: "<<batchData.label<<endl;
-			cout<<"Predictions on Train Data: "<<exec->outputs[0]<<endl;
-			cout<<"Type of Actual: "<<typeid(batchData.label).name()<<endl;
-			cout<<"Type of Pred: "<<typeid(exec->outputs[0]).name()<<endl;
-			break;*/
 		}
 		avg_trainAcc = round_fig(avg_trainAcc / batchCount);
 		// validating model on validation data
