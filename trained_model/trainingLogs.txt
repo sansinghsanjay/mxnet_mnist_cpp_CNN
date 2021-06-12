@@ -1,0 +1,10 @@
+Epoch: 1 | Training Time: 14.26 secs | Train Acc: 0.1 | Val Acc: 0.04
+Epoch: 2 | Training Time: 14.8 secs | Train Acc: 0.1 | Val Acc: 0.04
+Epoch: 3 | Training Time: 14.16 secs | Train Acc: 0.1 | Val Acc: 0.04
+Epoch: 4 | Training Time: 13.81 secs | Train Acc: 0.1 | Val Acc: 0.04
+Epoch: 5 | Training Time: 14.26 secs | Train Acc: 0.1 | Val Acc: 0.04
+Epoch: 6 | Training Time: 14.57 secs | Train Acc: 0.1 | Val Acc: 0.04
+Epoch: 7 | Training Time: 14.19 secs | Train Acc: 0.1 | Val Acc: 0.04
+Epoch: 8 | Training Time: 14.84 secs | Train Acc: 0.1 | Val Acc: 0.04
+Epoch: 9 | Training Time: 14.37 secs | Train Acc: 0.1 | Val Acc: 0.04
+Epoch: 10 | Training Time: 14.56 secs | Train Acc: 0.1 | Val Acc: 0.04

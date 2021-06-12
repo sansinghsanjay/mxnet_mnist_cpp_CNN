@@ -11,6 +11,7 @@ $ g++ train.cpp -lmxnet
 #include <iostream>
 #include <mxnet-cpp/MxNetCpp.h>
 #include <chrono>
+#include <fstream>
 
 // namespaces
 using namespace std;
@@ -111,6 +112,7 @@ int main() {
 	// variable declaration
 	Context ctx = Context::cpu();
 	map<string, NDArray> args_map;
+	ofstream logWriter;
 	cout<<"Declared variables"<<endl;
 	// initialising variables
 	args_map["data"] = NDArray(Shape(BATCH_SIZE, IMAGE_C, IMAGE_W, IMAGE_H), ctx);
@@ -120,6 +122,7 @@ int main() {
 	string trainRecFilePath = "/home/sansingh/github_repo/mxnet_mnist_cpp_CNN/dataset/im2rec_sampleSet/mnistSampleSet_train.rec";
 	string valRecFilePath = "/home/sansingh/github_repo/mxnet_mnist_cpp_CNN/dataset/im2rec_sampleSet/mnistSampleSet_val.rec";
 	string targetModelPath = "/home/sansingh/github_repo/mxnet_mnist_cpp_CNN/trained_model/model";
+	string trainingLogPath = "/home/sansingh/github_repo/mxnet_mnist_cpp_CNN/trained_model/trainingLogs.txt";
 	// declaring data iterator for train data
 	auto trainImgIter = MXDataIter("ImageRecordIter")
 		.SetParam("path_imgrec", trainRecFilePath)
@@ -152,6 +155,8 @@ int main() {
 	auto arg_names = cnn_net.ListArguments();
 	args_map = exec->arg_dict();
 	cout<<"Successfully create runtime"<<endl;
+	// preparing log writer
+	logWriter.open(trainingLogPath);
 	// training model
 	for(int epoch=0; epoch<EPOCHS; epoch++) {
 		int batchCount = 0;
@@ -203,7 +208,10 @@ int main() {
 		}
 		avg_valAcc = round_fig(avg_valAcc / batchCount);
 		cout<<"Epoch: "<<epoch + 1<<" | Training Time: "<<time_taken<<" secs | Train Acc: "<<avg_trainAcc<<" | Val Acc: "<<avg_valAcc<<endl;
+		logWriter<<"Epoch: "<<epoch + 1<<" | Training Time: "<<time_taken<<" secs | Train Acc: "<<avg_trainAcc<<" | Val Acc: "<<avg_valAcc<<"\n";
 	}
+	// closing log file
+	logWriter.close();
 	// saving model
 	cout<<"Saving model..."<<endl;
 	auto save_args = args_map;
