@@ -119,6 +119,7 @@ int main() {
 	// paths
 	string trainRecFilePath = "/home/sansingh/github_repo/mxnet_mnist_cpp_CNN/dataset/im2rec_sampleSet/mnistSampleSet_train.rec";
 	string valRecFilePath = "/home/sansingh/github_repo/mxnet_mnist_cpp_CNN/dataset/im2rec_sampleSet/mnistSampleSet_val.rec";
+	string targetModelPath = "/home/sansingh/github_repo/mxnet_mnist_cpp_CNN/trained_model/model";
 	// declaring data iterator for train data
 	auto trainImgIter = MXDataIter("ImageRecordIter")
 		.SetParam("path_imgrec", trainRecFilePath)
@@ -149,6 +150,8 @@ int main() {
 	// preparing runtime
 	auto *exec = cnn_net.SimpleBind(ctx, args_map);
 	auto arg_names = cnn_net.ListArguments();
+	args_map = exec->arg_dict();
+	cout<<"Successfully create runtime"<<endl;
 	// training model
 	for(int epoch=0; epoch<EPOCHS; epoch++) {
 		int batchCount = 0;
@@ -201,6 +204,13 @@ int main() {
 		avg_valAcc = round_fig(avg_valAcc / batchCount);
 		cout<<"Epoch: "<<epoch + 1<<" | Training Time: "<<time_taken<<" secs | Train Acc: "<<avg_trainAcc<<" | Val Acc: "<<avg_valAcc<<endl;
 	}
+	// saving model
+	cout<<"Saving model..."<<endl;
+	auto save_args = args_map;
+	save_args.erase(save_args.find("data"));
+	save_args.erase(save_args.find("label"));
+	NDArray::Save(targetModelPath, save_args);
+	cout<<"Successfully saved model"<<endl;
 	delete exec;
 	MXNotifyShutdown();
 	return 0;
